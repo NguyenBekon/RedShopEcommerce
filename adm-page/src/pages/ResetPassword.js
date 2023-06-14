@@ -1,5 +1,6 @@
 import React from "react";
 import CustomInput from "../components/CustomInput";
+import { Link } from "react-router-dom";
 
 const ResetPassword = () => {
   return (
@@ -17,13 +18,14 @@ const ResetPassword = () => {
         <form action="">
           <CustomInput type="password" label="New Password" id="password" />
           <CustomInput type="password" label="Confirm Password" id="password" />
-          <button
-            className="border-0 px-3 py-2 text-white fw-bold w-100"
+          <Link
+            className="border-0 px-3 py-2 text-white fw-bold w-100 text-center text-decoration-none"
             style={{ background: "#ffd333" }}
             type="submit"
+            to={"/"}
           >
             Save
-          </button>
+          </Link>
         </form>
       </div>
     </div>
