@@ -5,6 +5,16 @@ import ResetPassword from "./pages/ResetPassword";
 import ForgotPassword from "./pages/ForgotPassword";
 import Dashboard from "./pages/Dashboard";
 import MainLayout from "./components/MainLayout";
+import Enquiries from "./pages/Enquiries";
+import Bloglist from "./pages/Bloglist";
+import BlogCateList from "./pages/BlogCateList";
+import Orders from "./pages/Orders";
+import Customers from "./pages/Customers";
+import ColorList from "./pages/ColorList";
+import CategoryList from "./pages/CategoryList";
+import BrandList from "./pages/BrandList";
+import ProductList from "./pages/ProductList";
+import AddBlog from "./pages/AddBlog";
 
 function App() {
   return (
@@ -15,6 +25,16 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/admin" element={<MainLayout />}>
           <Route index element={<Dashboard />} />
+          <Route path="enquiries" element={<Enquiries />} />
+          <Route path="blog-list" element={<Bloglist />} />
+          <Route path="blog" element={<AddBlog />} />
+          <Route path="blog-category-list" element={<BlogCateList />} />
+          <Route path="orders" element={<Orders />} />
+          <Route path="customers" element={<Customers />} />
+          <Route path="list-color" element={<ColorList />} />
+          <Route path="list-category" element={<CategoryList />} />
+          <Route path="list-brand" element={<BrandList />} />
+          <Route path="list-product" element={<ProductList />} />
         </Route>
       </Routes>
     </Router>
