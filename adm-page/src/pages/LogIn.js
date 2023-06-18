@@ -7,16 +7,15 @@ import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../features/auth/authSlice";
 
+let schema = Yup.object().shape({
+  email: Yup.string()
+    .email("Email should be valid")
+    .required("Email is required"),
+  password: Yup.string().required("Password is required"),
+});
 const LogIn = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  let schema = Yup.object().shape({
-    email: Yup.string()
-      .email("Email should be valid")
-      .required("Email is required"),
-    password: Yup.string().required("Password is required"),
-  });
 
   const formik = useFormik({
     initialValues: {
@@ -26,26 +25,27 @@ const LogIn = () => {
     validationSchema: schema,
     onSubmit: (values) => {
       dispatch(login(values));
-      alert(JSON.stringify(values, null, 2));
     },
   });
 
-  const { user, isLoading, isError, isSuccess, message } = useSelector(
-    (state) => state.auth
-  );
+  const authState = useSelector((state) => state);
+  const { user, isLoading, isError, isSuccess, message } = authState.auth;
   useEffect(() => {
-    if (!user == null || isSuccess) {
+    if (isSuccess) {
       navigate("admin");
     } else {
-      alert("Message");
+      navigate("");
     }
-  }, [user, isLoading, isError, isSuccess, message]);
+  }, [user, isLoading, isError, isSuccess]);
 
   return (
     <div className="py-5" style={{ background: "#ffd333", minHeight: "100vh" }}>
       <div className="my-5 w-25 bg-white rounded-3 mx-auto p-4">
         <h3 className="text-center">Log In</h3>
         <p className="text-center">Login to your account to contine</p>
+        <div className="error text-center">
+          {message.message === "Rejected" ? " You are not an Admin" : ""}
+        </div>
         <form action="" onSubmit={formik.handleSubmit}>
           <CustomInput
             type="text"
@@ -53,6 +53,7 @@ const LogIn = () => {
             label="Email Address"
             id="email"
             onChng={formik.handleChange("email")}
+            onBlr={formik.handleBlur("email")}
             val={formik.values.email}
           />
           <div className="error">
@@ -67,6 +68,7 @@ const LogIn = () => {
             label="Password"
             id="password"
             onChng={formik.handleChange("password")}
+            onBlr={formik.handleBlur("password")}
             val={formik.values.password}
           />
           <div className="error">

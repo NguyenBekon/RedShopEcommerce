@@ -1,38 +1,84 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Table } from "antd";
-// import { BiEdit } from "react-icons/bi";
-// import { AiFillDelete } from "react-icons/ai";
+import { useDispatch, useSelector } from "react-redux";
+import { getProducts } from "../features/product/productSlice";
+import { BiEdit } from "react-icons/bi";
+import { AiFillDelete } from "react-icons/ai";
+import { Link } from "react-router-dom";
 
 const columns = [
   {
-    title: "Name",
-    dataIndex: "name",
+    title: "SNo",
+    dataIndex: "key",
   },
   {
-    title: "Age",
-    dataIndex: "age",
+    title: "Title",
+    dataIndex: "title",
+    sorter: (a, b) => a.title.length - b.title.length,
+    sortDirections: ["descend"],
   },
   {
-    title: "Address",
-    dataIndex: "address",
+    title: "Brand",
+    dataIndex: "brand",
+    // sorter: (a, b) => a.brand.length - b.brand.length,
+    sortDirections: ["descend"],
+  },
+  {
+    title: "Category",
+    dataIndex: "category",
+    // sorter: (a, b) => a.category.length - b.category.length,
+    sortDirections: ["descend"],
+  },
+  {
+    title: "Color",
+    dataIndex: "color",
+    // sorter: (a, b) => a.color.length - b.color.length,
+    sortDirections: ["descend"],
+  },
+  {
+    title: "Price",
+    dataIndex: "price",
+    sorter: (a, b) => a.price - b.price,
+  },
+  {
+    title: "Action",
+    dataIndex: "action",
   },
 ];
-const data1 = [];
-for (let i = 0; i < 46; i++) {
-  data1.push({
-    key: i,
-    name: `Product ${i}`,
-    age: 32,
-    address: `London, Park Lane no. ${i}`,
-  });
-}
 
 const ProductList = () => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getProducts());
+  }, [dispatch]);
+  const productState = useSelector((state) => state.product.products);
+  const data1 = [];
+  for (let i = 0; i < productState.length; i++) {
+    data1.push({
+      key: i + 1,
+      title: productState[i].title,
+      brand: productState[i].brand,
+      category: productState[i].category,
+      color: productState[i].color,
+      price: `${productState[i].price}`,
+      action: (
+        <>
+          <Link>
+            <BiEdit className="fs-4 text-primary" />
+          </Link>
+          <Link>
+            <AiFillDelete className="ms-3 fs-4 text-danger" />
+          </Link>
+        </>
+      ),
+    });
+  }
+
   return (
     <div>
       <h3 className="mb-4 title">Product List</h3>
       <div>
-        <Table columns={columns} dataSource={data1} />;
+        <Table columns={columns} dataSource={data1} />
       </div>
     </div>
   );
