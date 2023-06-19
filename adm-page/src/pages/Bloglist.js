@@ -1,36 +1,54 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Table } from "antd";
+import { Link } from "react-router-dom";
+import { BiEdit } from "react-icons/bi";
+import { AiFillDelete } from "react-icons/ai";
+import { useDispatch, useSelector } from "react-redux";
+import { getBlogs } from "../features/blog/blogSlice";
 
 const columns = [
   {
-    title: "Name",
-    dataIndex: "name",
+    title: "SNo",
+    dataIndex: "key",
   },
   {
-    title: "Age",
-    dataIndex: "age",
+    title: "Title",
+    dataIndex: "title",
   },
   {
-    title: "Address",
-    dataIndex: "address",
+    title: "Action",
+    dataIndex: "action",
   },
 ];
-const data1 = [];
-for (let i = 0; i < 46; i++) {
-  data1.push({
-    key: i,
-    name: `Edward King ${i}`,
-    age: 32,
-    address: `London, Park Lane no. ${i}`,
-  });
-}
 
 const Bloglist = () => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getBlogs());
+  }, [dispatch]);
+  const blogState = useSelector((state) => state.blog.blogs);
+  const data1 = [];
+  for (let i = 0; i < blogState.length; i++) {
+    data1.push({
+      key: i + 1,
+      title: blogState[i].title,
+      action: (
+        <>
+          <Link>
+            <BiEdit className="fs-4 text-primary" />
+          </Link>
+          <Link>
+            <AiFillDelete className="ms-3 fs-4 text-danger" />
+          </Link>
+        </>
+      ),
+    });
+  }
   return (
     <div>
       <h3 className="mb-4 title">Blog List</h3>
       <div>
-        <Table columns={columns} dataSource={data1} />;
+        <Table columns={columns} dataSource={data1} />
       </div>
     </div>
   );

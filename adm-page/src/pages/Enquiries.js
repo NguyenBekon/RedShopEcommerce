@@ -29,7 +29,7 @@ const Enquiries = () => {
     <div>
       <h3 className="mb-4 title">Enquiries</h3>
       <div>
-        <Table columns={columns} dataSource={data1} />;
+        <Table columns={columns} dataSource={data1} />
       </div>
     </div>
   );

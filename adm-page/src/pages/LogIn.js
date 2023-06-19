@@ -34,7 +34,7 @@ const LogIn = () => {
     if (isSuccess) {
       navigate("admin");
     } else {
-      navigate("");
+      navigate("/");
     }
   }, [user, isLoading, isError, isSuccess]);
 
