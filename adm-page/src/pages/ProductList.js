@@ -20,19 +20,16 @@ const columns = [
   {
     title: "Brand",
     dataIndex: "brand",
-    // sorter: (a, b) => a.brand.length - b.brand.length,
     sortDirections: ["descend"],
   },
   {
     title: "Category",
     dataIndex: "category",
-    // sorter: (a, b) => a.category.length - b.category.length,
     sortDirections: ["descend"],
   },
   {
     title: "Color",
     dataIndex: "color",
-    // sorter: (a, b) => a.color.length - b.color.length,
     sortDirections: ["descend"],
   },
   {

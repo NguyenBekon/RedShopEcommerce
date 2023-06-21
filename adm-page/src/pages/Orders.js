@@ -50,11 +50,9 @@ const Orders = () => {
       name: orderState[i].orderby.firstname,
       product: orderState[i].products.map((i, j) => {
         return (
-          <>
-            <ul key={j}>
-              <li key="li">{i.product.title}</li>
-            </ul>
-          </>
+          <ul key={j}>
+            <li key="li">{i.product.title}</li>
+          </ul>
         );
       }),
       amount: orderState[i].paymentIntent.amount,

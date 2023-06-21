@@ -28,12 +28,12 @@ const CategoryList = () => {
     dispatch(getCategories());
   }, [dispatch]);
 
-  const pCatStat = useSelector((state) => state.prodCategory.pCategories);
+  const pCatState = useSelector((state) => state.prodCategory.pCategories);
   const data1 = [];
-  for (let i = 0; i < pCatStat.length; i++) {
+  for (let i = 0; i < pCatState.length; i++) {
     data1.push({
       key: i + 1,
-      name: pCatStat[i].title,
+      name: pCatState[i].title,
       action: (
         <>
           <Link className=" fs-4 text-primary">
