@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, createAction } from "@reduxjs/toolkit";
 import pCategoryService from "./prodCategoryService";
 
 export const getCategories = createAsyncThunk(
@@ -11,6 +11,18 @@ export const getCategories = createAsyncThunk(
     }
   }
 );
+
+export const createProdCategories = createAsyncThunk(
+  "productCategory/create-productCategories",
+  async (prodCategoryData, thunkAPI) => {
+    try {
+      return await pCategoryService.createProdCategories(prodCategoryData);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+export const resetState = createAction("Reset_all");
 
 const initialState = {
   pCategories: [],
@@ -40,7 +52,23 @@ export const pCategorySlice = createSlice({
         state.isError = true;
         state.isSuccess = false;
         state.message = action.error;
-      });
+      })
+      .addCase(createProdCategories.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(createProdCategories.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.isSuccess = true;
+        state.createdProdCategory = action.payload;
+      })
+      .addCase(createProdCategories.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+        state.message = action.error;
+      })
+      .addCase(resetState, () => initialState);
   },
 });
 

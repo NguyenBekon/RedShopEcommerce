@@ -16,6 +16,10 @@ const columns = [
     dataIndex: "title",
   },
   {
+    title: "Category",
+    dataIndex: "category",
+  },
+  {
     title: "Action",
     dataIndex: "action",
   },
@@ -32,6 +36,7 @@ const Bloglist = () => {
     data1.push({
       key: i + 1,
       title: blogState[i].title,
+      category: blogState[i].category,
       action: (
         <>
           <Link>

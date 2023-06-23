@@ -38,7 +38,6 @@ const AddProduct = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [color, setColor] = useState([]);
-  const [images, setImages] = useState([]);
 
   useEffect(() => {
     dispatch(getBrands());
@@ -60,6 +59,7 @@ const AddProduct = () => {
       toast.error("Something Went Wrong!");
     }
   }, [isSuccess, isError, isLoading, createdProduct]);
+
   const coloropt = [];
   colorState.forEach((i) => {
     coloropt.push({
@@ -99,6 +99,7 @@ const AddProduct = () => {
       setColor(null);
       setTimeout(() => {
         dispatch(resetState());
+        navigate("/admin/list-product");
       }, 3000);
     },
   });
@@ -163,8 +164,8 @@ const AddProduct = () => {
             <option value="">Select Brand</option>
             {brandState.map((i, j) => {
               return (
-                <option key={j} value={i.brand}>
-                  {i.brand}
+                <option key={j} value={i.title}>
+                  {i.title}
                 </option>
               );
             })}
@@ -202,7 +203,7 @@ const AddProduct = () => {
             id=""
           >
             <option value="" disabled>
-              Select Category
+              Select Tags
             </option>
             <option value="featured">Featured</option>
             <option value="popular">Popular</option>
@@ -264,7 +265,7 @@ const AddProduct = () => {
                     className="btn-close position-absolute"
                     style={{ top: "10px", right: "10px" }}
                   ></button>
-                  <img src={i.url} alt="" width={200} height={200} />
+                  <img src={i.url} alt="" width={450} height={250} />
                 </div>
               );
             })}
