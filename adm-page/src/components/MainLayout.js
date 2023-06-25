@@ -33,8 +33,8 @@ const MainLayout = () => {
       <Sider trigger={null} collapsible collapsed={collapsed}>
         <div className="logo">
           <h2 className="text-white fs-5 text-center py-3 mb-0">
-            <span className="sm-logo">DC</span>
-            <span className="lg-logo">Dev Corner</span>
+            <span className="sm-logo">RS</span>
+            <span className="lg-logo">Red Shop</span>
           </h2>
         </div>
         <Menu
@@ -111,9 +111,9 @@ const MainLayout = () => {
               label: "Orders",
             },
             {
-              key: "marketing",
+              key: "coupons",
               icon: <RiCouponLine className="fs-4" />,
-              label: "Marketing",
+              label: "Coupons",
               children: [
                 {
                   key: "coupon",
@@ -121,7 +121,7 @@ const MainLayout = () => {
                   label: "Add Coupon",
                 },
                 {
-                  key: "coupon-list",
+                  key: "list-coupon",
                   icon: <RiCouponLine className="fs-4" />,
                   label: "Coupon List",
                 },
