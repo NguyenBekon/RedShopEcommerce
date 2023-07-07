@@ -1,10 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Table } from "antd";
 import { BiEdit } from "react-icons/bi";
 import { AiFillDelete } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { getCoupons } from "../features/coupon/couponSlice";
+import { deleteACoupon, getCoupons } from "../features/coupon/couponSlice";
+import CustomModal from "../components/CustomModal";
 
 const columns = [
   {
@@ -32,6 +33,17 @@ const columns = [
 ];
 
 const CouponList = () => {
+  const [open, setOpen] = useState(false);
+  const [couponId, setcouponId] = useState("");
+  const showModal = (e) => {
+    setOpen(true);
+    setcouponId(e);
+  };
+
+  const hideModal = () => {
+    setOpen(false);
+  };
+
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getCoupons());
@@ -47,16 +59,30 @@ const CouponList = () => {
       discount: couponState[i].discount,
       action: (
         <>
-          <Link className=" fs-4 text-primary">
+          <Link
+            to={`/admin/coupon/${couponState[i]._id}`}
+            className=" fs-4 text-primary"
+          >
             <BiEdit />
           </Link>
-          <Link className="ms-3 fs-4 text-danger ">
+          <button
+            onClick={() => showModal(couponState[i]._id)}
+            className="ms-3 fs-4 text-danger "
+          >
             <AiFillDelete />
-          </Link>
+          </button>
         </>
       ),
     });
   }
+  const deleteCoupon = (e) => {
+    dispatch(deleteACoupon(e));
+
+    setOpen(false);
+    setTimeout(() => {
+      dispatch(getCoupons());
+    }, 100);
+  };
 
   return (
     <div>
@@ -64,6 +90,14 @@ const CouponList = () => {
       <div>
         <Table columns={columns} dataSource={data1} />
       </div>
+      <CustomModal
+        hideModal={hideModal}
+        open={open}
+        performAction={() => {
+          deleteCoupon(couponId);
+        }}
+        title="Are you sure you want to delete this Coupon?"
+      />
     </div>
   );
 };

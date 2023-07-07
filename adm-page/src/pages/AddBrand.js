@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useFormik } from "formik";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -39,12 +38,11 @@ const AddBrand = () => {
     } else {
       dispatch(resetState());
     }
-  }, [getBrandId]);
+  }, [getBrandId, dispatch]);
 
   useEffect(() => {
     if (isSuccess && createdBrand) {
       toast.success("Brand Added Successfullly!");
-      navigate("/admin/list-brand");
     }
     if (isSuccess && updatedBrand) {
       toast.success("Brand Updated Successfullly!");
@@ -54,7 +52,7 @@ const AddBrand = () => {
     if (isError) {
       toast.error("Something Went Wrong!");
     }
-  }, [isSuccess, isError, isLoading, createdBrand, updatedBrand]);
+  }, [isSuccess, isError, isLoading, createdBrand, updatedBrand, navigate]);
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -83,7 +81,7 @@ const AddBrand = () => {
         {getBrandId !== undefined ? "Edit" : "Add"} Brand
       </h3>
       <div>
-        <form onSubmit={formik.handleSubmit}>
+        <form onSubmit={formik.handleSubmit} action="">
           <CustomInput
             type="text"
             label="Enter Brand Name"
@@ -91,6 +89,7 @@ const AddBrand = () => {
             onChng={formik.handleChange("title")}
             onBlr={formik.handleBlur("title")}
             val={formik.values.title}
+            id="brand"
           />
           <div className="error">
             {formik.touched.title && formik.errors.title}

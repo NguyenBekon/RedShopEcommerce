@@ -7,8 +7,13 @@ import "react-quill/dist/quill.snow.css";
 import * as yup from "yup";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { createBlogs, resetState } from "../features/blog/blogSlice";
+import { useLocation, useNavigate } from "react-router-dom";
+import {
+  createBlogs,
+  getABlog,
+  resetState,
+  updateABlog,
+} from "../features/blog/blogSlice";
 import { getBCategories } from "../features/bCategory/bCategorySlice";
 import { useFormik } from "formik";
 import { delImg, uploadImg } from "../features/upload/uploadSlice";
@@ -23,25 +28,52 @@ let schema = yup.object().shape({
 const AddBlog = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    dispatch(getBCategories());
-  }, [dispatch]);
+  const location = useLocation();
+  const getBlogId = location.pathname.split("/")[3];
 
   const bCategoryState = useSelector((state) => state.bCategory.bCategories);
 
   const imgState = useSelector((state) => state.upload.images);
 
   const blogState = useSelector((state) => state.blog);
-  const { isSuccess, isError, isLoading, createdBlog } = blogState;
+  const {
+    isSuccess,
+    isError,
+    isLoading,
+    createdBlog,
+    blogName,
+    blogDesc,
+    blogCategory,
+    blogImages,
+    updatedBlog,
+  } = blogState;
+
+  useEffect(() => {
+    if (getBlogId !== undefined) {
+      dispatch(getABlog(getBlogId));
+      img.push(blogImages);
+    } else {
+      dispatch(resetState());
+    }
+  }, [getBlogId, blogImages, dispatch]);
+
+  useEffect(() => {
+    dispatch(resetState());
+    dispatch(getBCategories());
+  }, [dispatch]);
+
   useEffect(() => {
     if (isSuccess && createdBlog) {
       toast.success("Blog Added Successfullly!");
     }
+    if (isSuccess && updatedBlog) {
+      toast.success("Blog Updated Successfullly!");
+      navigate("/admin/blog-list");
+    }
     if (isError) {
       toast.error("Something Went Wrong!");
     }
-  }, [isSuccess, isError, isLoading, createdBlog]);
+  }, [isSuccess, isError, isLoading, createdBlog, updatedBlog, navigate]);
 
   const img = [];
   imgState.forEach((i) => {
@@ -53,64 +85,56 @@ const AddBlog = () => {
 
   useEffect(() => {
     formik.values.images = img;
-  }, [img]);
+  }, [blogImages]);
 
   const formik = useFormik({
+    enableReinitialize: true,
     initialValues: {
-      title: "",
-      description: "",
-      category: "",
+      title: blogName || "",
+      description: blogDesc || "",
+      category: blogCategory || "",
       images: "",
     },
     validationSchema: schema,
     onSubmit: (values) => {
-      dispatch(createBlogs(values));
-      formik.resetForm();
-      setTimeout(() => {
+      if (getBlogId !== undefined) {
+        const data = { id: getBlogId, blogData: values };
+        dispatch(updateABlog(data));
         dispatch(resetState());
-        navigate("/admin/blog-list");
-      }, 3000);
+      } else {
+        dispatch(createBlogs(values));
+        formik.resetForm();
+        setTimeout(() => {
+          dispatch(resetState());
+        }, 300);
+      }
     },
   });
 
   return (
     <div>
-      <h3 className="mb-4">Add Blog </h3>
-      <div>
-        <form
-          onSubmit={formik.handleSubmit}
-          className="d-flex gap-3 flex-column"
-        >
-          <CustomInput
-            type="text"
-            label="Enter Blog Title"
-            name="title"
-            onChng={formik.handleChange("title")}
-            onBlr={formik.handleBlur("title")}
-            val={formik.values.title}
-          />
-          <div className="error">
-            {formik.touched.title && formik.errors.title}
-          </div>
-
-          <div className="">
-            <ReactQuill
-              theme="snow"
-              name="description"
-              onChange={formik.handleChange("description")}
-              value={formik.values.description}
+      <h3 className="mb-4">{getBlogId !== undefined ? "Edit" : "Add"} Blog</h3>
+      <div className="">
+        <form action="" onSubmit={formik.handleSubmit}>
+          <div className="mt-4">
+            <CustomInput
+              type="text"
+              label="Enter Blog Title"
+              name="title"
+              onChng={formik.handleChange("title")}
+              onBlr={formik.handleBlur("title")}
+              val={formik.values.title}
             />
           </div>
           <div className="error">
-            {formik.touched.description && formik.errors.description}
+            {formik.touched.title && formik.errors.title}
           </div>
-
           <select
             name="category"
             onChange={formik.handleChange("category")}
             onBlur={formik.handleBlur("category")}
             value={formik.values.category}
-            className="form-control py-3 mb-3"
+            className="form-control py-3  mt-3"
             id=""
           >
             <option value="">Select Blog Category</option>
@@ -125,8 +149,17 @@ const AddBlog = () => {
           <div className="error">
             {formik.touched.category && formik.errors.category}
           </div>
-
-          <div className="bg-white border-1 p-5 text-center">
+          <ReactQuill
+            theme="snow"
+            className="mt-3"
+            name="description"
+            onChange={formik.handleChange("description")}
+            value={formik.values.description}
+          />
+          <div className="error">
+            {formik.touched.description && formik.errors.description}
+          </div>
+          <div className="bg-white border-1 p-5 text-center mt-3">
             <Dropzone
               onDrop={(acceptedFiles) => dispatch(uploadImg(acceptedFiles))}
             >
@@ -142,8 +175,7 @@ const AddBlog = () => {
               )}
             </Dropzone>
           </div>
-
-          <div className="showimages d-flex flex-wrap gap-3">
+          <div className="showimages d-flex flex-wrap mt-3 gap-3">
             {imgState?.map((i, j) => {
               return (
                 <div className=" position-relative" key={j}>
@@ -153,7 +185,7 @@ const AddBlog = () => {
                     className="btn-close position-absolute"
                     style={{ top: "10px", right: "10px" }}
                   ></button>
-                  <img src={i.url} alt="" width={450} height={250} />
+                  <img src={i.url} alt="" width={200} height={200} />
                 </div>
               );
             })}
@@ -163,7 +195,7 @@ const AddBlog = () => {
             className="btn btn-success border-0 rounded-3 my-5"
             type="submit"
           >
-            Add
+            {getBlogId !== undefined ? "Edit" : "Add"} Blog
           </button>
         </form>
       </div>
