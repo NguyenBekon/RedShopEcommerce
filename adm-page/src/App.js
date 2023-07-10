@@ -23,6 +23,7 @@ import AddProduct from "./pages/AddProduct";
 import CouponList from "./pages/CouponList";
 import AddCoupon from "./pages/AddCoupon";
 import ViewEnq from "./pages/ViewEnq";
+import ViewOrder from "./pages/ViewOrder";
 
 function App() {
   return (
@@ -46,6 +47,7 @@ function App() {
           <Route path="blog-category/:id" element={<AddBlogCategory />} />
 
           <Route path="orders" element={<Orders />} />
+          <Route path="order/:id" element={<ViewOrder />} />
 
           <Route path="customers" element={<Customers />} />
 

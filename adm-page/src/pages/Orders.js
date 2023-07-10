@@ -48,21 +48,17 @@ const Orders = () => {
     data1.push({
       key: i + 1,
       name: orderState[i].orderby.firstname,
-      product: orderState[i].products.map((i, j) => {
-        return (
-          <ul key={j}>
-            <li key="li">{i.product.title}</li>
-          </ul>
-        );
-      }),
+      product: (
+        <Link to={`/admin/order/${orderState[i].orderby._id}`}>View Order</Link>
+      ),
       amount: orderState[i].paymentIntent.amount,
       date: new Date(orderState[i].createdAt).toLocaleString(),
       action: (
         <>
-          <Link className=" fs-4 text-primary">
+          <Link to={"/"} className=" fs-4 text-primary">
             <BiEdit />
           </Link>
-          <Link className="ms-3 fs-4 text-danger">
+          <Link to={"/"} className="ms-3 fs-4 text-danger">
             <AiFillDelete />
           </Link>
         </>
